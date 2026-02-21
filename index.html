@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            /* スライドの幅と余白を定義 */
             --slide-width: 65vw;
             --slide-margin: 3vw;
             --total-slide-width: calc(var(--slide-width) + (var(--slide-margin) * 2));
@@ -67,7 +66,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* 矢印のデザイン（グレー） */
         .nav-arrow {
             position: absolute;
             top: 50%;
@@ -130,30 +128,27 @@
     </div>
 
     <div class="slider-viewport">
-        <!-- 左矢印 -->
         <button class="nav-arrow arrow-left" onclick="moveSlide(-1)" aria-label="Previous">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
 
-        <!-- スライダー本体 -->
         <div id="sliderTrack" class="slider-track">
             <!-- 
-                 srcの名前をあなたのGitHubリポジトリのファイル名と完全に一致させています。
+                空白（スペース）を %20 に置き換えて記述しました。
+                GitHub Pagesのようなサーバーでは、この書き方の方が確実に画像を認識できます。
             -->
-            <div class="slide"><img src="モノ (2).jpg" alt="Photo 2"></div>
-            <div class="slide"><img src="モノ (4).jpg" alt="Photo 4"></div>
-            <div class="slide"><img src="モノ (5).jpg" alt="Photo 5"></div>
-            <div class="slide"><img src="mono (7).jpg" alt="Photo 7"></div>
-            <div class="slide"><img src="mono (9).jpg" alt="Photo 9"></div>
-            <div class="slide"><img src="モノ (11).jpg" alt="Photo 11"></div>
+            <div class="slide"><img src="モノ%20(2).jpg" alt="作品 2"></div>
+            <div class="slide"><img src="モノ%20(4).jpg" alt="作品 4"></div>
+            <div class="slide"><img src="モノ%20(5).jpg" alt="作品 5"></div>
+            <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
+            <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
+            <div class="slide"><img src="モノ%20(11).jpg" alt="作品 11"></div>
         </div>
 
-        <!-- 右矢印 -->
         <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </button>
 
-        <!-- インジケーター -->
         <div id="dotsContainer" class="dots"></div>
     </div>
 
@@ -163,7 +158,6 @@
         const dotsContainer = document.getElementById('dotsContainer');
         let currentIndex = 0;
 
-        // ドット（インジケーター）の生成
         slides.forEach((_, i) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
@@ -171,19 +165,13 @@
         });
         const dots = document.querySelectorAll('.dot');
 
-        /**
-         * スライダーの表示状態を更新する関数
-         */
         function updateSlider() {
-            // スライドの合計幅（本体65vw + マージン3vw * 2 = 71vw）
             const slideWidthVW = 71; 
-            // 画面の中央に配置するためのオフセット計算
             const centerOffsetVW = (100 - slideWidthVW) / 2;
             const targetX = -(currentIndex * slideWidthVW) + centerOffsetVW;
             
             track.style.transform = `translateX(${targetX}vw)`;
 
-            // アクティブなスライドのスタイル切り替え
             slides.forEach((slide, index) => {
                 const isActive = index === currentIndex;
                 slide.classList.toggle('active', isActive);
@@ -191,23 +179,16 @@
             });
         }
 
-        /**
-         * 次または前のスライドへ移動する関数
-         */
         function moveSlide(direction) {
             currentIndex += direction;
-            // 範囲制限
             if (currentIndex < 0) currentIndex = 0;
             if (currentIndex >= slides.length) currentIndex = slides.length - 1;
             updateSlider();
         }
 
-        // ページ読み込み時に初期化
         window.onload = updateSlider;
-        // 画面サイズ変更時に位置を再計算
         window.onresize = updateSlider;
 
-        // キーボード操作の追加
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') moveSlide(-1);
             if (e.key === 'ArrowRight') moveSlide(1);
