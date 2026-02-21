@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            /* スライドの幅と余白を定義 */
+            --slide-width: 65vw;
+            --slide-margin: 3vw;
+            --total-slide-width: calc(var(--slide-width) + (var(--slide-margin) * 2));
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #020617; 
+            color: #f8fafc;
+            overflow: hidden;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .slider-viewport {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .slider-track {
+            display: flex;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .slide {
+            flex: 0 0 var(--slide-width);
+            height: 80vh;
+            margin: 0 var(--slide-margin);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.8s ease;
+            opacity: 0.15;
+            transform: scale(0.8);
+            filter: blur(4px);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 矢印のデザイン（グレー） */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            color: #94a3b8;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .arrow-left { left: 3vw; }
+        .arrow-right { right: 3vw; }
+
+        .dots {
+            position: absolute;
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #334155;
+            transition: all 0.4s;
+        }
+        .dot.active {
+            background-color: #f8fafc;
+            transform: scale(2);
+        }
+
+        .title-overlay {
+            position: absolute;
+            top: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-overlay">
+        <h1 class="text-xs tracking-[0.8em] uppercase text-gray-500">Photography Portfolio</h1>
+    </div>
+
+    <div class="slider-viewport">
+        <!-- 左矢印 -->
+        <button class="nav-arrow arrow-left" onclick="moveSlide(-1)" aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+
+        <!-- スライダー本体 -->
+        <div id="sliderTrack" class="slider-track">
+            <!-- 
+                 srcの名前をあなたのGitHubリポジトリのファイル名と完全に一致させています。
+            -->
+            <div class="slide"><img src="モノ (2).jpg" alt="Photo 2"></div>
+            <div class="slide"><img src="モノ (4).jpg" alt="Photo 4"></div>
+            <div class="slide"><img src="モノ (5).jpg" alt="Photo 5"></div>
+            <div class="slide"><img src="mono (7).jpg" alt="Photo 7"></div>
+            <div class="slide"><img src="mono (9).jpg" alt="Photo 9"></div>
+            <div class="slide"><img src="モノ (11).jpg" alt="Photo 11"></div>
+        </div>
+
+        <!-- 右矢印 -->
+        <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+
+        <!-- インジケーター -->
+        <div id="dotsContainer" class="dots"></div>
+    </div>
+
+    <script>
+        const track = document.getElementById('sliderTrack');
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dotsContainer');
+        let currentIndex = 0;
+
+        // ドット（インジケーター）の生成
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            dotsContainer.appendChild(dot);
+        });
+        const dots = document.querySelectorAll('.dot');
+
+        /**
+         * スライダーの表示状態を更新する関数
+         */
+        function updateSlider() {
+            // スライドの合計幅（本体65vw + マージン3vw * 2 = 71vw）
+            const slideWidthVW = 71; 
+            // 画面の中央に配置するためのオフセット計算
+            const centerOffsetVW = (100 - slideWidthVW) / 2;
+            const targetX = -(currentIndex * slideWidthVW) + centerOffsetVW;
+            
+            track.style.transform = `translateX(${targetX}vw)`;
+
+            // アクティブなスライドのスタイル切り替え
+            slides.forEach((slide, index) => {
+                const isActive = index === currentIndex;
+                slide.classList.toggle('active', isActive);
+                dots[index].classList.toggle('active', isActive);
+            });
+        }
+
+        /**
+         * 次または前のスライドへ移動する関数
+         */
+        function moveSlide(direction) {
+            currentIndex += direction;
+            // 範囲制限
+            if (currentIndex < 0) currentIndex = 0;
+            if (currentIndex >= slides.length) currentIndex = slides.length - 1;
+            updateSlider();
+        }
+
+        // ページ読み込み時に初期化
+        window.onload = updateSlider;
+        // 画面サイズ変更時に位置を再計算
+        window.onresize = updateSlider;
+
+        // キーボード操作の追加
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') moveSlide(-1);
+            if (e.key === 'ArrowRight') moveSlide(1);
+        });
+    </script>
+</body>
+</html>
