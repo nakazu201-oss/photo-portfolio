@@ -226,23 +226,23 @@
                 --slide-margin: 3vw;
             }
             
-            /* スマホでは画面を縦に並べる（自然なスクロールを実現） */
             body {
                 display: flex;
                 flex-direction: column;
+                justify-content: flex-start;
             }
 
             .title-overlay {
                 display: none; 
             }
 
-            /* テキスト情報を通常配置にし、間延びを完全に防ぐ */
+            /* テキスト情報：下部の余白を0にして、間延びを完全に防ぐ */
             .category-info {
                 position: relative;
                 bottom: auto; left: auto; top: auto; transform: none;
                 width: 100%;
-                /* ヘッダーボタンを避けるための上部余白 ＋ 下部余白 */
-                padding: 12vh 6vw 4vh 6vw; 
+                /* 上:10vh(BACKボタン回避), 左右:6vw, 下:0 */
+                padding: 10vh 6vw 0 6vw; 
                 text-align: center;
                 animation: fadeInSP 1.5s ease-out forwards;
                 z-index: 50;
@@ -266,15 +266,19 @@
             }
             .category-info p {
                 font-size: 10px;
-                line-height: 2.2; 
+                /* 行間を少し詰めてスッキリと見せる */
+                line-height: 2.0; 
             }
 
-            /* スライダー本体の配置：テキストの直下に自然に配置される */
+            /* スライダー本体：上詰めにしてテキストとの距離を固定 */
             .slider-viewport {
                 height: auto;
-                min-height: 60vh;
-                padding-top: 0; 
-                padding-bottom: 8vh; /* ドットのための下部余白 */
+                flex-grow: 1;
+                /* ★ここで上詰め(flex-start)にし、余白が勝手に伸びるのを防ぐ */
+                align-items: flex-start; 
+                /* テキストと画像の隙間をここで直接コントロール */
+                padding-top: 3vh; 
+                padding-bottom: 0; 
             }
 
             .slider-track {
@@ -282,21 +286,31 @@
             }
 
             .slide {
-                height: 48vh; 
+                /* スマホでの画像の高さを指定 */
+                height: 52vh; 
                 margin-top: 0;
             }
 
-            /* 矢印の配置：slider-viewportに対して完璧な縦中央へ */
+            /* ★矢印の配置：画像の高さに合わせて完璧な中央に置く★ 
+               計算式：上部の隙間(3vh) + 画像の半分の高さ(52vh ÷ 2) = 29vh
+            */
             .nav-arrow {
-                top: 45%; /* ドットエリアの余白を考慮して視覚的な中央へ微調整 */
+                top: 29vh; 
                 width: 36px;
                 height: 36px;
+                transform: translateY(-50%);
             }
+            @media (hover: none) {
+                .nav-arrow:active {
+                    transform: translateY(-50%) scale(0.95);
+                }
+            }
+            
             .arrow-left { left: 2vw; }
             .arrow-right { right: 2vw; }
             
             .dots {
-                bottom: 2vh;
+                bottom: 6vh;
             }
         }
     </style>
@@ -320,7 +334,6 @@
     <!-- コンセプト文エリア（スマホでは上部、PCでは左下） -->
     <div class="category-info">
         <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
-            <!-- ★横線を短くし、両側に配置しました -->
             <span class="w-6 h-[1px] bg-[#c5a059]"></span>
             <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 01</span>
             <span class="w-6 h-[1px] bg-[#c5a059]"></span>
