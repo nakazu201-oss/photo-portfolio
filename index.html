@@ -104,7 +104,9 @@
 
         .slide {
             flex: 0 0 var(--slide-width);
-            height: 70vh; 
+            /* PC版では高さを制限しつつ、横長画像に合わせて調整 */
+            height: auto; 
+            max-height: 70vh;
             margin: 0 var(--slide-margin);
             display: flex;
             justify-content: center;
@@ -123,7 +125,8 @@
 
         .slide img {
             max-width: 100%;
-            max-height: 100%;
+            /* 横長画像が潰れないように高さを自動に */
+            height: auto; 
             object-fit: contain;
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(197, 160, 89, 0.3);
@@ -220,12 +223,13 @@
         }
 
         /* =========================================
-           スマホ（SP）用の完璧な再設計（縦積みレイアウト）
+           スマホ（SP）用の完璧な再設計（横長画像特化）
            ========================================= */
         @media (max-width: 768px) {
             :root {
-                --slide-width: 78vw; 
-                --slide-margin: 3vw;
+                /* スマホでは横幅いっぱいに使う */
+                --slide-width: 85vw; 
+                --slide-margin: 2vw;
             }
             
             body {
@@ -238,13 +242,13 @@
                 display: none; 
             }
 
-            /* テキスト情報：下部の余白を0にして、間延びを完全に防ぐ */
+            /* テキスト情報 */
             .category-info {
                 position: relative;
                 bottom: auto; left: auto; top: auto; transform: none;
                 width: 100%;
-                /* 上:10vh(BACKボタン回避), 左右:6vw, 下:0 */
-                padding: 10vh 6vw 0 6vw; 
+                /* 上:12vh(BACKボタン回避), 左右:6vw, 下:4vh(画像との自然な距離) */
+                padding: 12vh 6vw 4vh 6vw; 
                 text-align: center;
                 animation: fadeInSP 1.5s ease-out forwards;
                 z-index: 50;
@@ -268,19 +272,18 @@
             }
             .category-info p {
                 font-size: 10px;
-                /* 行間を少し詰めてスッキリと見せる */
                 line-height: 2.0; 
             }
 
-            /* スライダー本体：上詰めにしてテキストとの距離を固定 */
+            /* スライダー本体：横長画像に合わせて高さを自動調整（間延び防止） */
             .slider-viewport {
+                /* 高さを固定せず、中身の画像に合わせて縮むように設定 */
                 height: auto;
-                flex-grow: 1;
-                /* ★ここで上詰め(flex-start)にし、余白が勝手に伸びるのを防ぐ */
-                align-items: flex-start; 
-                /* テキストと画像の隙間をここで直接コントロール */
-                padding-top: 3vh; 
-                padding-bottom: 0; 
+                min-height: auto;
+                flex-grow: 0; 
+                align-items: center; 
+                padding-top: 0; 
+                padding-bottom: 10vh; /* ドットのための下部余白だけ確保 */
             }
 
             .slider-track {
@@ -288,16 +291,22 @@
             }
 
             .slide {
-                /* スマホでの画像の高さを指定 */
-                height: 52vh; 
+                /* 高さを指定せず、横幅(85vw)に合わせて自然な高さを出す */
+                height: auto; 
                 margin-top: 0;
             }
 
-            /* ★矢印の配置：画像の高さに合わせて完璧な中央に置く★ 
-               計算式：上部の隙間(3vh) + 画像の半分の高さ(52vh ÷ 2) = 29vh
-            */
+            .slide img {
+                /* 画像も高さを100%に固定せず、アスペクト比を維持 */
+                height: auto;
+                width: 100%;
+            }
+
+            /* ★矢印の配置：画像の高さに合わせて完璧な中央に置く★ */
             .nav-arrow {
-                top: 29vh; 
+                /* 画像が自然な高さになったので、50%で真ん中に来ます */
+                /* ただし、下部のドット用余白(10vh)の分を少し上にずらす調整 */
+                top: calc(50% - 5vh); 
                 width: 36px;
                 height: 36px;
                 transform: translateY(-50%);
@@ -308,11 +317,11 @@
                 }
             }
             
-            .arrow-left { left: 2vw; }
-            .arrow-right { right: 2vw; }
+            .arrow-left { left: 1vw; }
+            .arrow-right { right: 1vw; }
             
             .dots {
-                bottom: 6vh;
+                bottom: 2vh;
             }
         }
     </style>
@@ -355,18 +364,18 @@
         </button>
 
         <div id="sliderTrack" class="slider-track">
-            <!-- 0 -->
+            <!-- 0: 元の2 -->
             <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-            <!-- 1 -->
+            <!-- 1: 元の11 -->
             <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
-            <!-- 2 (Start) -->
-            <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
-            <!-- 3 -->
-            <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
-            <!-- 4 -->
+            <!-- 2: ★元7と入れ替えた 12 (Start) -->
+            <div class="slide"><img src="mono%20(12).jpg" alt="作品 12"></div>
+            <!-- 3: ★元5と入れ替えた 6 -->
+            <div class="slide"><img src="mono%20(6).jpg" alt="作品 6"></div>
+            <!-- 4: 元の9 -->
             <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-            <!-- 5 -->
-            <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
+            <!-- 5: ★元4と入れ替えた 13 -->
+            <div class="slide"><img src="mono%20(13).jpg" alt="作品 13"></div>
         </div>
 
         <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
@@ -381,7 +390,7 @@
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('dotsContainer');
         
-        // 初期表示
+        // ★画像12（インデックス2）からスタート
         let currentIndex = 2;
 
         slides.forEach((_, i) => {
