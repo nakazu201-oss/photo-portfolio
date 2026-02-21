@@ -353,18 +353,18 @@
         </button>
 
         <div id="sliderTrack" class="slider-track">
-            <!-- 0 -->
+            <!-- インデックス: 0 -->
             <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-            <!-- 1 -->
+            <!-- インデックス: 1 -->
             <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
-            <!-- 2 (Start) -->
-            <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
-            <!-- 3 -->
-            <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
-            <!-- 4 -->
+            <!-- インデックス: 2 (ここからスタート / 画像7と12をチェンジ) -->
+            <div class="slide"><img src="mono%20(12).jpg" alt="作品 12"></div>
+            <!-- インデックス: 3 (画像5と6をチェンジ) -->
+            <div class="slide"><img src="mono%20(6).jpg" alt="作品 6"></div>
+            <!-- インデックス: 4 -->
             <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-            <!-- 5 -->
-            <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
+            <!-- インデックス: 5 (画像4と13をチェンジ) -->
+            <div class="slide"><img src="mono%20(13).jpg" alt="作品 13"></div>
         </div>
 
         <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
@@ -379,7 +379,7 @@
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('dotsContainer');
         
-        // 初期表示
+        // ★初期表示のインデックスを「2」（3番目の要素である画像12）に設定
         let currentIndex = 2;
 
         slides.forEach((_, i) => {
