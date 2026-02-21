@@ -302,12 +302,12 @@
             </button>
 
             <div class="slider-track">
-                <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-                <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
-                <div class="slide"><img src="mono%20(12).jpg" alt="作品 12"></div>
-                <div class="slide"><img src="mono%20(6).jpg" alt="作品 6"></div>
-                <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-                <div class="slide"><img src="mono%20(13).jpg" alt="作品 13"></div>
+                <div class="slide"><img src="モノ2.jpg" alt="作品 2"></div>
+                <div class="slide"><img src="モノ11.jpg" alt="作品 11"></div> 
+                <div class="slide"><img src="モノ12.jpg" alt="作品 12"></div>
+                <div class="slide"><img src="モノ6.jpg" alt="作品 6"></div>
+                <div class="slide"><img src="モノ9.jpg" alt="作品 9"></div>
+                <div class="slide"><img src="モノ13.jpg" alt="作品 13"></div>
             </div>
 
             <button class="nav-arrow arrow-right" aria-label="Next">
@@ -341,14 +341,13 @@
             </button>
 
             <div class="slider-track">
-                <div class="slide"><img src="pt01%20(0).jpg" alt="ポートレート 0"></div>
-                <div class="slide"><img src="pt01%20(3).jpg" alt="ポートレート 3"></div> 
-                <div class="slide"><img src="pt01%20(6).JPG" alt="ポートレート 6"></div>
-                <div class="slide"><img src="pt01%20(8).JPG" alt="ポートレート 8"></div>
-                <div class="slide"><img src="pt01%20(11).JPG" alt="ポートレート 11"></div>
-                <div class="slide"><img src="pt01%20(12).jpg" alt="ポートレート 12"></div>
-                <div class="slide"><img src="pt01%20(13).jpg" alt="ポートレート 13"></div>
-                <div class="slide"><img src="pt01%20(16).jpg" alt="ポートレート 16"></div>
+                <div class="slide"><img src="pt3.jpg" alt="ポートレート 3"></div> 
+                <div class="slide"><img src="pt6.JPG" alt="ポートレート 6"></div>
+                <div class="slide"><img src="pt8.JPG" alt="ポートレート 8"></div>
+                <div class="slide"><img src="pt11.JPG" alt="ポートレート 11"></div>
+                <div class="slide"><img src="pt12.jpg" alt="ポートレート 12"></div>
+                <div class="slide"><img src="pt13.jpg" alt="ポートレート 13"></div>
+                <div class="slide"><img src="pt16.jpg" alt="ポートレート 16"></div>
             </div>
 
             <button class="nav-arrow arrow-right" aria-label="Next">
@@ -438,4 +437,9 @@
                 touchEndX = e.changedTouches[0].screenX;
                 const threshold = 50; 
                 if (touchEndX < touchStartX - threshold) moveSlide(1);
-                if (touchEndX > touch
+                if (touchEndX > touchStartX + threshold) moveSlide(-1);
+            }, {passive: true});
+        });
+    </script>
+</body>
+</html>
