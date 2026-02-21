@@ -63,7 +63,7 @@
             }
         }
 
-        /* セクションごとの枠組み（PCでは1画面、SPでは自然な高さ） */
+        /* セクションごとの枠組み */
         .portfolio-section {
             position: relative;
             width: 100%;
@@ -94,7 +94,7 @@
         .slider-viewport {
             position: relative;
             width: 100%;
-            height: 100vh; /* PCは全画面 */
+            height: 100vh;
             display: flex;
             align-items: center;
             overflow: hidden;
@@ -142,9 +142,9 @@
 
         .slide img {
             max-width: 100%;
-            max-height: 70vh; /* 縦画像が画面を突き抜けないように制限 */
+            max-height: 70vh;
             height: auto; 
-            width: auto; /* 高さに合わせて幅を自動調整 */
+            width: auto;
             object-fit: contain;
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(197, 160, 89, 0.3);
@@ -207,7 +207,7 @@
         }
 
         /* =========================================
-           スマホ（SP）用の調整（縦横両対応）
+           スマホ（SP）用の調整
            ========================================= */
         @media (max-width: 768px) {
             :root {
@@ -245,13 +245,12 @@
 
             .slider-viewport {
                 height: auto;
-                min-height: 60vh; /* 最低限の高さを確保 */
+                min-height: 60vh;
                 padding-bottom: 8vh;
             }
 
-            /* スマホでも縦横比が崩れないように再設定 */
             .slide img {
-                max-height: 65vh; /* スマホ画面の65%まで */
+                max-height: 65vh;
                 width: auto;
                 max-width: 100%;
             }
@@ -302,12 +301,12 @@
             </button>
 
             <div class="slider-track">
-                <div class="slide"><img src="モノ2.jpg" alt="作品 2"></div>
-                <div class="slide"><img src="モノ11.jpg" alt="作品 11"></div> 
-                <div class="slide"><img src="モノ12.jpg" alt="作品 12"></div>
-                <div class="slide"><img src="モノ6.jpg" alt="作品 6"></div>
-                <div class="slide"><img src="モノ9.jpg" alt="作品 9"></div>
-                <div class="slide"><img src="モノ13.jpg" alt="作品 13"></div>
+                <div class="slide"><img src="mono2.jpg" alt="作品 2"></div>
+                <div class="slide"><img src="mono11.jpg" alt="作品 11"></div> 
+                <div class="slide"><img src="mono12.jpg" alt="作品 12"></div>
+                <div class="slide"><img src="mono6.jpg" alt="作品 6"></div>
+                <div class="slide"><img src="mono9.jpg" alt="作品 9"></div>
+                <div class="slide"><img src="mono13.jpg" alt="作品 13"></div>
             </div>
 
             <button class="nav-arrow arrow-right" aria-label="Next">
@@ -341,6 +340,7 @@
             </button>
 
             <div class="slider-track">
+                <div class="slide"><img src="pt0.jpg" alt="ポートレート 0"></div>
                 <div class="slide"><img src="pt3.jpg" alt="ポートレート 3"></div> 
                 <div class="slide"><img src="pt6.JPG" alt="ポートレート 6"></div>
                 <div class="slide"><img src="pt8.JPG" alt="ポートレート 8"></div>
