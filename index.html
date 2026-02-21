@@ -157,18 +157,6 @@
             pointer-events: none;
         }
 
-        .tategaki-title {
-            position: absolute;
-            right: 4vw;
-            top: 20vh;
-            z-index: 100;
-            color: var(--color-gold);
-            font-size: 1.1rem;
-            letter-spacing: 0.5em;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
         .back-btn {
             position: absolute;
             top: 4vh;
@@ -223,10 +211,6 @@
             .arrow-left { left: 15vw; }
             .arrow-right { right: 15vw; }
             
-            .tategaki-title {
-                display: none; 
-            }
-
             /* スマホ時のカテゴリー情報の配置 */
             .category-info {
                 bottom: auto;
@@ -249,7 +233,8 @@
 </head>
 <body>
 
-    <a href="javascript:history.back()" class="back-btn sans uppercase">
+    <!-- 戻るボタンのリンク先を変更 -->
+    <a href="https://nakazu201-oss.github.io/my-ai-blog-/" class="back-btn sans uppercase">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         BACK TO PROFILE
     </a>
@@ -261,7 +246,7 @@
         <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
     </div>
 
-    <!-- ★ 新規追加：コンセプト文エリア ★ -->
+    <!-- コンセプト文エリア -->
     <div class="category-info">
         <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
             <span class="w-6 h-[1px] bg-[#c5a059]"></span>
@@ -275,21 +260,23 @@
         </p>
     </div>
 
-    <div class="tategaki-title tategaki">
-        記憶の断片を、<br>光と影で紡ぐ。
-    </div>
-
     <div class="slider-viewport">
         <button class="nav-arrow arrow-left" onclick="moveSlide(-1)" aria-label="Previous">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
 
         <div id="sliderTrack" class="slider-track">
+            <!-- インデックス: 0 -->
             <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
+            <!-- インデックス: 1 -->
             <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
+            <!-- インデックス: 2 (ここからスタート) -->
             <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
+            <!-- インデックス: 3 -->
             <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
+            <!-- インデックス: 4 -->
             <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
+            <!-- インデックス: 5 -->
             <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
         </div>
 
@@ -304,7 +291,9 @@
         const track = document.getElementById('sliderTrack');
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('dotsContainer');
-        let currentIndex = 0;
+        
+        // ★初期表示のインデックスを「2」（3番目の要素である画像7）に変更
+        let currentIndex = 2;
 
         slides.forEach((_, i) => {
             const dot = document.createElement('div');
@@ -338,8 +327,17 @@
 
         function moveSlide(direction) {
             currentIndex += direction;
-            if (currentIndex < 0) currentIndex = 0;
-            if (currentIndex >= slides.length) currentIndex = slides.length - 1;
+            
+            // ★無限ループのロジックに変更
+            // 0未満（最初の画像から戻る）になったら、一番最後の画像へ
+            if (currentIndex < 0) {
+                currentIndex = slides.length - 1;
+            } 
+            // 最後の画像を越えたら（最後の画像から進む）、最初の画像へ
+            else if (currentIndex >= slides.length) {
+                currentIndex = 0;
+            }
+            
             updateSlider();
         }
 
