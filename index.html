@@ -29,13 +29,14 @@
             color: var(--color-text);
             font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
             letter-spacing: 0.08em;
+            position: relative; /* 戻るボタンの配置基準として必要 */
         }
 
         .sans { font-family: 'Zen Kaku Gothic New', sans-serif; }
         
-        /* 常に左上に追従する設定 */
+        /* ページ最上部のみに配置（追従しない） */
         .back-btn {
-            position: fixed;
+            position: absolute;
             top: 4vh;
             left: 4vw;
             z-index: 999;
@@ -46,21 +47,12 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
-            background: rgba(253, 252, 248, 0.7);
-            backdrop-filter: blur(8px);
-            padding: 8px 16px;
-            border-radius: 30px;
+            background: transparent;
+            padding: 0;
         }
         .back-btn:hover {
             opacity: 0.6;
-        }
-        @media (min-width: 769px) {
-            .back-btn {
-                background: transparent;
-                backdrop-filter: none;
-                padding: 0;
-                border-radius: 0;
-            }
+            color: var(--color-gold);
         }
 
         /* セクションごとの枠組み */
@@ -221,7 +213,8 @@
                 position: relative;
                 bottom: auto; left: auto; top: auto; transform: none;
                 width: 100%;
-                padding: 12vh 6vw 2vh 6vw; 
+                /* 戻るボタンが追従しなくなったので上の余白を少し調整 */
+                padding: 10vh 6vw 2vh 6vw; 
                 text-align: center;
                 z-index: 50;
             }
@@ -273,6 +266,7 @@
         BACK TO PROFILE
     </a>
 
+    <!-- ▼▼ 第1セクション：静物（STILL LIFE） ▼▼ -->
     <section class="portfolio-section" id="slider1">
         <div class="title-overlay">
             <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-400 sans">
@@ -300,7 +294,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
 
-            <div class="slider-track">
+            <!-- data-initial-index="2" で配列の2番目(mono12.jpg)を初期表示に設定 -->
+            <div class="slider-track" data-initial-index="2">
                 <div class="slide"><img src="mono2.jpg" alt="作品 2"></div>
                 <div class="slide"><img src="mono11.jpg" alt="作品 11"></div> 
                 <div class="slide"><img src="mono12.jpg" alt="作品 12"></div>
@@ -315,6 +310,9 @@
             <div class="dots"></div>
         </div>
     </section>
+    <!-- ▲▲ 第1セクション ここまで ▲▲ -->
+
+    <!-- ▼▼ 第2セクション：人物（PORTRAIT） ▼▼ -->
     <section class="portfolio-section" id="slider2">
         <div class="title-overlay">
             <div class="w-[1px] h-12 bg-[#c5a059] mx-auto mt-0 opacity-30 md:block hidden"></div>
@@ -339,14 +337,16 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
 
-            <div class="slider-track">
+            <!-- data-initial-index="3" で配列の3番目(pt8.JPG)を初期表示に設定 -->
+            <div class="slider-track" data-initial-index="3">
                 <div class="slide"><img src="pt0.jpg" alt="ポートレート 0"></div>
                 <div class="slide"><img src="pt3.jpg" alt="ポートレート 3"></div> 
-                <div class="slide"><img src="pt6.JPG" alt="ポートレート 6"></div>
-                <div class="slide"><img src="pt8.JPG" alt="ポートレート 8"></div>
-                <div class="slide"><img src="pt11.JPG" alt="ポートレート 11"></div>
-                <div class="slide"><img src="pt12.jpg" alt="ポートレート 12"></div>
+                <!-- pt13 と pt6 を入れ替えました -->
                 <div class="slide"><img src="pt13.jpg" alt="ポートレート 13"></div>
+                <div class="slide"><img src="pt8.JPG" alt="ポートレート 8"></div>
+                <!-- pt11 は削除しました -->
+                <div class="slide"><img src="pt12.jpg" alt="ポートレート 12"></div>
+                <div class="slide"><img src="pt6.JPG" alt="ポートレート 6"></div>
                 <div class="slide"><img src="pt16.jpg" alt="ポートレート 16"></div>
             </div>
 
@@ -356,11 +356,13 @@
             <div class="dots"></div>
         </div>
     </section>
+    <!-- ▲▲ 第2セクション ここまで ▲▲ -->
+
     <script>
         // ページ内のすべてのポートフォリオセクションを取得
         const sections = document.querySelectorAll('.portfolio-section');
 
-        // 各セクションごとにスライダーの機能を設定（独立して動くようにする）
+        // 各セクションごとにスライダーの機能を設定
         sections.forEach((section) => {
             const track = section.querySelector('.slider-track');
             const slides = section.querySelectorAll('.slide');
@@ -369,8 +371,9 @@
             const nextBtn = section.querySelector('.arrow-right');
             const sliderViewport = section.querySelector('.slider-viewport');
             
-            // 各スライダーの真ん中あたりの画像からスタートさせる
-            let currentIndex = Math.floor(slides.length / 2);
+            // HTMLの data-initial-index 属性から初期表示の番号を取得。設定がなければ真ん中にする
+            const initialData = parseInt(track.dataset.initialIndex, 10);
+            let currentIndex = isNaN(initialData) ? Math.floor(slides.length / 2) : initialData;
             let dots = [];
 
             // ドットの生成
