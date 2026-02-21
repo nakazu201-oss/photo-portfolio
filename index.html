@@ -23,7 +23,6 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            /* 画面が小さい場合に縦スクロールができるように変更 */
             min-height: 100vh;
             overflow-x: hidden;
             background-color: var(--color-bg);
@@ -34,12 +33,7 @@
 
         .sans { font-family: 'Zen Kaku Gothic New', sans-serif; }
         
-        .tategaki {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-        }
-
-        /* 常に左上に追従する設定（fixed） */
+        /* 常に左上に追従する設定 */
         .back-btn {
             position: fixed;
             top: 4vh;
@@ -52,7 +46,6 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
-            /* スマホ等でスクロール時に被っても読めるように、薄いすりガラス背景を敷く */
             background: rgba(253, 252, 248, 0.7);
             backdrop-filter: blur(8px);
             padding: 8px 16px;
@@ -61,8 +54,6 @@
         .back-btn:hover {
             opacity: 0.6;
         }
-        
-        /* PCでは背景を消してスッキリ見せる */
         @media (min-width: 769px) {
             .back-btn {
                 background: transparent;
@@ -70,6 +61,33 @@
                 padding: 0;
                 border-radius: 0;
             }
+        }
+
+        /* セクションごとの枠組み（PCでは1画面、SPでは自然な高さ） */
+        .portfolio-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        /* PC用：タイトル装飾 */
+        .title-overlay {
+            position: absolute;
+            top: 6vh;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .category-info {
+            position: absolute;
+            bottom: 8vh;
+            left: 5vw;
+            z-index: 100;
+            pointer-events: none;
         }
 
         /* スライダー領域の設定 */
@@ -104,7 +122,6 @@
 
         .slide {
             flex: 0 0 var(--slide-width);
-            /* PC版では高さを制限しつつ、横長画像に合わせて調整 */
             height: auto; 
             max-height: 70vh;
             margin: 0 var(--slide-margin);
@@ -125,8 +142,9 @@
 
         .slide img {
             max-width: 100%;
-            /* 横長画像が潰れないように高さを自動に */
+            max-height: 70vh; /* 縦画像が画面を突き抜けないように制限 */
             height: auto; 
+            width: auto; /* 高さに合わせて幅を自動調整 */
             object-fit: contain;
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(197, 160, 89, 0.3);
@@ -134,7 +152,7 @@
             padding: 4px; 
         }
 
-        /* 矢印の基本デザイン */
+        /* 矢印のデザイン */
         .nav-arrow {
             position: absolute;
             top: 50%;
@@ -154,7 +172,6 @@
             transition: all 0.4s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-
         @media (hover: hover) {
             .nav-arrow:hover {
                 color: #fff;
@@ -162,14 +179,6 @@
                 transform: translateY(-50%) scale(1.05);
             }
         }
-        
-        @media (hover: none) {
-            .nav-arrow:active {
-                background: rgba(197, 160, 89, 0.2);
-                transform: translateY(-50%) scale(0.95);
-            }
-        }
-
         .arrow-left { left: 4vw; }
         .arrow-right { right: 4vw; }
 
@@ -180,7 +189,7 @@
             left: 0;
             width: 100%;
             display: flex;
-            justify-content: center; /* 確実に中央寄せするプロの書き方 */
+            justify-content: center;
             gap: 16px;
             z-index: 100;
         }
@@ -197,65 +206,24 @@
             transform: scale(1.8);
         }
 
-        /* PC版：テキスト類を絶対配置で浮かせる */
-        .title-overlay {
-            position: absolute;
-            top: 6vh;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .category-info {
-            position: absolute;
-            bottom: 8vh;
-            left: 5vw;
-            z-index: 100;
-            pointer-events: none;
-            animation: fadeIn 1.5s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         /* =========================================
-           スマホ（SP）用の完璧な再設計（横長画像特化）
+           スマホ（SP）用の調整（縦横両対応）
            ========================================= */
         @media (max-width: 768px) {
             :root {
-                /* スマホでは横幅いっぱいに使う */
                 --slide-width: 85vw; 
                 --slide-margin: 2vw;
             }
-            
-            body {
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-            }
 
-            .title-overlay {
-                display: none; 
-            }
+            .title-overlay { display: none; }
 
-            /* テキスト情報 */
             .category-info {
                 position: relative;
                 bottom: auto; left: auto; top: auto; transform: none;
                 width: 100%;
-                /* 上:12vh(BACKボタン回避), 左右:6vw, 下:4vh(画像との自然な距離) */
-                padding: 12vh 6vw 4vh 6vw; 
+                padding: 12vh 6vw 2vh 6vw; 
                 text-align: center;
-                animation: fadeInSP 1.5s ease-out forwards;
                 z-index: 50;
-            }
-            @keyframes fadeInSP {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
             }
 
             .category-info h2 {
@@ -275,200 +243,199 @@
                 line-height: 2.0; 
             }
 
-            /* スライダー本体：横長画像に合わせて高さを自動調整（間延び防止） */
             .slider-viewport {
-                /* 高さを固定せず、中身の画像に合わせて縮むように設定 */
                 height: auto;
-                min-height: auto;
-                flex-grow: 0; 
-                align-items: center; 
-                padding-top: 0; 
-                padding-bottom: 10vh; /* ドットのための下部余白だけ確保 */
+                min-height: 60vh; /* 最低限の高さを確保 */
+                padding-bottom: 8vh;
             }
 
-            .slider-track {
-                padding-top: 0; 
-            }
-
-            .slide {
-                /* 高さを指定せず、横幅(85vw)に合わせて自然な高さを出す */
-                height: auto; 
-                margin-top: 0;
-            }
-
+            /* スマホでも縦横比が崩れないように再設定 */
             .slide img {
-                /* 画像も高さを100%に固定せず、アスペクト比を維持 */
-                height: auto;
-                width: 100%;
+                max-height: 65vh; /* スマホ画面の65%まで */
+                width: auto;
+                max-width: 100%;
             }
 
-            /* ★矢印の配置：画像の高さに合わせて完璧な中央に置く★ */
             .nav-arrow {
-                /* 画像が自然な高さになったので、50%で真ん中に来ます */
-                /* ただし、下部のドット用余白(10vh)の分を少し上にずらす調整 */
-                top: calc(50% - 5vh); 
+                top: calc(50% - 4vh); 
                 width: 36px;
                 height: 36px;
-                transform: translateY(-50%);
             }
-            @media (hover: none) {
-                .nav-arrow:active {
-                    transform: translateY(-50%) scale(0.95);
-                }
-            }
-            
-            .arrow-left { left: 1vw; }
-            .arrow-right { right: 1vw; }
-            
-            .dots {
-                bottom: 2vh;
-            }
+            .arrow-left { left: 2vw; }
+            .arrow-right { right: 2vw; }
+            .dots { bottom: 2vh; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 常に左上に追従するBACKボタン -->
     <a href="https://nakazu201-oss.github.io/my-ai-blog-/" class="back-btn sans uppercase">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         BACK TO PROFILE
     </a>
 
-    <!-- PC用：タイトル装飾 -->
-    <div class="title-overlay">
-        <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-400 sans">
-            Photography Archive
-        </h1>
-        <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
-    </div>
-
-    <!-- コンセプト文エリア（スマホでは上部、PCでは左下） -->
-    <div class="category-info">
-        <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
-            <span class="w-6 h-[1px] bg-[#c5a059]"></span>
-            <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 01</span>
-            <span class="w-6 h-[1px] bg-[#c5a059]"></span>
-        </div>
-        <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">STILL LIFE<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 静物 -</span></h2>
-        <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
-            素材の呼吸を聴き、隠された表情を引き出す。<br>
-            質感、温度、そこに宿る物語。<br>
-            光と影の対話が、物の本質を浮き彫りにする。
-        </p>
-    </div>
-
-    <!-- スライダーエリア -->
-    <div class="slider-viewport">
-        <button class="nav-arrow arrow-left" onclick="moveSlide(-1)" aria-label="Previous">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        </button>
-
-        <div id="sliderTrack" class="slider-track">
-            <!-- 0: 元の2 -->
-            <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-            <!-- 1: 元の11 -->
-            <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
-            <!-- 2: ★元7と入れ替えた 12 (Start) -->
-            <div class="slide"><img src="mono%20(12).jpg" alt="作品 12"></div>
-            <!-- 3: ★元5と入れ替えた 6 -->
-            <div class="slide"><img src="mono%20(6).jpg" alt="作品 6"></div>
-            <!-- 4: 元の9 -->
-            <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-            <!-- 5: ★元4と入れ替えた 13 -->
-            <div class="slide"><img src="mono%20(13).jpg" alt="作品 13"></div>
+    <section class="portfolio-section" id="slider1">
+        <div class="title-overlay">
+            <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-400 sans">
+                Photography Archive
+            </h1>
+            <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
         </div>
 
-        <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-        </button>
+        <div class="category-info">
+            <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+                <span class="w-6 h-[1px] bg-[#c5a059]"></span>
+                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 01</span>
+                <span class="w-6 h-[1px] bg-[#c5a059]"></span>
+            </div>
+            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">STILL LIFE<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 静物 -</span></h2>
+            <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
+                素材の呼吸を聴き、隠された表情を引き出す。<br>
+                質感、温度、そこに宿る物語。<br>
+                光と影の対話が、物の本質を浮き彫りにする。
+            </p>
+        </div>
 
-        <div id="dotsContainer" class="dots"></div>
-    </div>
+        <div class="slider-viewport">
+            <button class="nav-arrow arrow-left" aria-label="Previous">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
 
+            <div class="slider-track">
+                <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
+                <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
+                <div class="slide"><img src="mono%20(12).jpg" alt="作品 12"></div>
+                <div class="slide"><img src="mono%20(6).jpg" alt="作品 6"></div>
+                <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
+                <div class="slide"><img src="mono%20(13).jpg" alt="作品 13"></div>
+            </div>
+
+            <button class="nav-arrow arrow-right" aria-label="Next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <div class="dots"></div>
+        </div>
+    </section>
+    <section class="portfolio-section" id="slider2">
+        <div class="title-overlay">
+            <div class="w-[1px] h-12 bg-[#c5a059] mx-auto mt-0 opacity-30 md:block hidden"></div>
+        </div>
+
+        <div class="category-info">
+            <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+                <span class="w-6 h-[1px] bg-[#c5a059]"></span>
+                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 02</span>
+                <span class="w-6 h-[1px] bg-[#c5a059]"></span>
+            </div>
+            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">PORTRAIT<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 人物 -</span></h2>
+            <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
+                その瞬間にしかない感情を、光の中に閉じ込める。<br>
+                瞳の奥に宿る真実、かすかな息遣い。<br>
+                レンズ越しに交わす、言葉なき対話。
+            </p>
+        </div>
+
+        <div class="slider-viewport">
+            <button class="nav-arrow arrow-left" aria-label="Previous">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+
+            <div class="slider-track">
+                <div class="slide"><img src="pt01%20(0).jpg" alt="ポートレート 0"></div>
+                <div class="slide"><img src="pt01%20(3).jpg" alt="ポートレート 3"></div> 
+                <div class="slide"><img src="pt01%20(6).JPG" alt="ポートレート 6"></div>
+                <div class="slide"><img src="pt01%20(8).JPG" alt="ポートレート 8"></div>
+                <div class="slide"><img src="pt01%20(11).JPG" alt="ポートレート 11"></div>
+                <div class="slide"><img src="pt01%20(12).jpg" alt="ポートレート 12"></div>
+                <div class="slide"><img src="pt01%20(13).jpg" alt="ポートレート 13"></div>
+                <div class="slide"><img src="pt01%20(16).jpg" alt="ポートレート 16"></div>
+            </div>
+
+            <button class="nav-arrow arrow-right" aria-label="Next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <div class="dots"></div>
+        </div>
+    </section>
     <script>
-        const track = document.getElementById('sliderTrack');
-        const slides = document.querySelectorAll('.slide');
-        const dotsContainer = document.getElementById('dotsContainer');
-        
-        // ★画像12（インデックス2）からスタート
-        let currentIndex = 2;
+        // ページ内のすべてのポートフォリオセクションを取得
+        const sections = document.querySelectorAll('.portfolio-section');
 
-        slides.forEach((_, i) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            dot.addEventListener('click', () => {
-                currentIndex = i;
+        // 各セクションごとにスライダーの機能を設定（独立して動くようにする）
+        sections.forEach((section) => {
+            const track = section.querySelector('.slider-track');
+            const slides = section.querySelectorAll('.slide');
+            const dotsContainer = section.querySelector('.dots');
+            const prevBtn = section.querySelector('.arrow-left');
+            const nextBtn = section.querySelector('.arrow-right');
+            const sliderViewport = section.querySelector('.slider-viewport');
+            
+            // 各スライダーの真ん中あたりの画像からスタートさせる
+            let currentIndex = Math.floor(slides.length / 2);
+            let dots = [];
+
+            // ドットの生成
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.addEventListener('click', () => {
+                    currentIndex = i;
+                    updateSlider();
+                });
+                dotsContainer.appendChild(dot);
+                dots.push(dot);
+            });
+
+            function updateSlider() {
+                const rootStyles = getComputedStyle(document.documentElement);
+                const slideWidthVW = parseFloat(rootStyles.getPropertyValue('--slide-width'));
+                const slideMarginVW = parseFloat(rootStyles.getPropertyValue('--slide-margin'));
+                
+                const totalSlideWidthVW = slideWidthVW + (slideMarginVW * 2);
+                const centerOffsetVW = (100 - totalSlideWidthVW) / 2;
+                const targetX = -(currentIndex * totalSlideWidthVW) + centerOffsetVW;
+                
+                track.style.transform = `translateX(${targetX}vw)`;
+
+                slides.forEach((slide, index) => {
+                    const isActive = index === currentIndex;
+                    slide.classList.toggle('active', isActive);
+                    dots[index].classList.toggle('active', isActive);
+                });
+            }
+
+            function moveSlide(direction) {
+                currentIndex += direction;
+                if (currentIndex < 0) {
+                    currentIndex = slides.length - 1;
+                } else if (currentIndex >= slides.length) {
+                    currentIndex = 0;
+                }
                 updateSlider();
-            });
-            dotsContainer.appendChild(dot);
-        });
-        const dots = document.querySelectorAll('.dot');
-
-        function updateSlider() {
-            const rootStyles = getComputedStyle(document.documentElement);
-            const slideWidthVW = parseFloat(rootStyles.getPropertyValue('--slide-width'));
-            const slideMarginVW = parseFloat(rootStyles.getPropertyValue('--slide-margin'));
-            
-            const totalSlideWidthVW = slideWidthVW + (slideMarginVW * 2);
-            
-            const centerOffsetVW = (100 - totalSlideWidthVW) / 2;
-            const targetX = -(currentIndex * totalSlideWidthVW) + centerOffsetVW;
-            
-            track.style.transform = `translateX(${targetX}vw)`;
-
-            slides.forEach((slide, index) => {
-                const isActive = index === currentIndex;
-                slide.classList.toggle('active', isActive);
-                dots[index].classList.toggle('active', isActive);
-            });
-        }
-
-        function moveSlide(direction) {
-            currentIndex += direction;
-            
-            // 無限ループ
-            if (currentIndex < 0) {
-                currentIndex = slides.length - 1;
-            } else if (currentIndex >= slides.length) {
-                currentIndex = 0;
             }
-            
+
+            // ボタンのクリックイベント
+            prevBtn.addEventListener('click', () => moveSlide(-1));
+            nextBtn.addEventListener('click', () => moveSlide(1));
+
+            // 初回表示のセットアップ
             updateSlider();
-        }
+            
+            // 画面サイズ変更時の再計算
+            window.addEventListener('resize', () => {
+                setTimeout(updateSlider, 100);
+            });
 
-        window.onload = updateSlider;
-        window.onresize = () => {
-            setTimeout(updateSlider, 100);
-        };
+            // スワイプ操作（スマホ対応）
+            let touchStartX = 0;
+            let touchEndX = 0;
 
-        // スワイプ操作
-        let touchStartX = 0;
-        let touchEndX = 0;
-        const sliderViewport = document.querySelector('.slider-viewport');
+            sliderViewport.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
 
-        sliderViewport.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-
-        sliderViewport.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
-
-        function handleSwipe() {
-            const threshold = 50; 
-            if (touchEndX < touchStartX - threshold) {
-                moveSlide(1);
-            }
-            if (touchEndX > touchStartX + threshold) {
-                moveSlide(-1);
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') moveSlide(-1);
-            if (e.key === 'ArrowRight') moveSlide(1);
-        });
-    </script>
-</body>
-</html>
+            sliderViewport.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                const threshold = 50; 
+                if (touchEndX < touchStartX - threshold) moveSlide(1);
+                if (touchEndX > touch
