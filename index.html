@@ -6,18 +6,15 @@
     <title>Photo Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: KNF風のフォントを読み込み -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;600&family=Zen+Kaku+Gothic+New:wght@300;400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- デザイン担当：KNF風のカラーとフォント設定 --- */
         :root {
             --color-gold: #c5a059;
-            --color-bg: #fdfcf8; /* 和紙のようなごく淡いクリーム色 */
+            --color-bg: #fdfcf8; 
             --color-text: #333333;
-            /* スライドの設定（PC用） */
             --slide-width: 65vw;
             --slide-margin: 3vw;
         }
@@ -36,7 +33,6 @@
 
         .sans { font-family: 'Zen Kaku Gothic New', sans-serif; }
         
-        /* 縦書きクラス */
         .tategaki {
             writing-mode: vertical-rl;
             text-orientation: mixed;
@@ -100,6 +96,7 @@
             padding: 4px; 
         }
 
+        /* 矢印の基本デザイン */
         .nav-arrow {
             position: absolute;
             top: 50%;
@@ -109,17 +106,32 @@
             backdrop-filter: blur(4px);
             border: 1px solid var(--color-gold);
             cursor: pointer;
-            padding: 15px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: var(--color-gold);
             border-radius: 50%;
             transition: all 0.4s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .nav-arrow:hover {
-            color: #fff;
-            background: var(--color-gold);
-            transform: translateY(-50%) scale(1.05);
+        /* PC等、マウスが使える端末のみホバー効果を適用（スマホでのバグを防止） */
+        @media (hover: hover) {
+            .nav-arrow:hover {
+                color: #fff;
+                background: var(--color-gold);
+                transform: translateY(-50%) scale(1.05);
+            }
+        }
+        
+        /* スマホ等のタッチ端末では、押した瞬間だけ光るようにする */
+        @media (hover: none) {
+            .nav-arrow:active {
+                background: rgba(197, 160, 89, 0.2);
+                transform: translateY(-50%) scale(0.95);
+            }
         }
 
         .arrow-left { left: 4vw; }
@@ -174,7 +186,6 @@
             opacity: 0.6;
         }
 
-        /* --- 新規追加：カテゴリー＆コンセプト情報 --- */
         .category-info {
             position: absolute;
             bottom: 8vh;
@@ -189,35 +200,32 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- スマホ（SP）用レスポンシブ設定 --- */
+        /* --- スマホ（SP）用の完璧な再設計 --- */
         @media (max-width: 768px) {
             :root {
-                --slide-width: 82vw; 
-                --slide-margin: 2vw;
+                --slide-width: 75vw; /* 左右の矢印を置くスペースを確保 */
+                --slide-margin: 3vw;
             }
-            .slide {
-                height: 50vh; /* テキスト領域を確保するため画像を調整 */
-                margin-top: 10vh; /* 少し下にずらして上部のテキストと離す */
-            }
-            .nav-arrow {
-                padding: 10px;
-                top: auto;
-                bottom: 12vh;
-                transform: none;
-            }
-            .nav-arrow:hover {
-                transform: scale(1.05); 
-            }
-            .arrow-left { left: 15vw; }
-            .arrow-right { right: 15vw; }
             
-            /* スマホ時のカテゴリー情報の配置 */
+            /* ヘッダー周りをスッキリさせるため、英語タイトルを非表示 */
+            .title-overlay {
+                display: none; 
+            }
+            
+            .back-btn {
+                top: 3vh; /* 少し上に詰める */
+            }
+
+            /* テキスト情報の上部固定化：絶対に画像と被らせない */
             .category-info {
                 bottom: auto;
-                top: 13vh; /* タイトルのすぐ下へ */
+                top: 10vh; /* 画面の上から10%の位置に固定 */
                 left: 50%;
                 transform: translateX(-50%);
                 width: 90%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 text-align: center;
                 animation: fadeInSP 1.5s ease-out forwards;
             }
@@ -225,6 +233,45 @@
                 from { opacity: 0; transform: translate(-50%, 10px); }
                 to { opacity: 1; transform: translate(-50%, 0); }
             }
+
+            /* スマホ用のタイポグラフィ（文字）調整 */
+            .category-info h2 {
+                font-size: 1.8rem;
+                margin-bottom: 0.8rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .category-info h2 span {
+                margin-left: 0;
+                margin-top: 0.3rem;
+                display: block;
+            }
+            .category-info p {
+                font-size: 10px;
+                line-height: 2.4; /* 読みやすいように行間を広げる */
+            }
+
+            /* スライダー本体の配置：テキストを避けて下半分に配置 */
+            .slider-track {
+                align-items: flex-start; /* 上揃えにしてから */
+                padding-top: 42vh; /* 上から42%の余白を開けて画像を置く */
+            }
+
+            .slide {
+                height: 42vh; /* 画像の高さ。42(余白)+42(画像)=84%。これで下のドットとも被らない */
+                margin-top: 0;
+            }
+
+            /* 矢印の配置：画像の高さに合わせて中央に置く */
+            .nav-arrow {
+                top: 63%; /* 42vh(余白) + 21vh(画像の半分) = 63% の位置 */
+                width: 40px;
+                height: 40px;
+            }
+            .arrow-left { left: 1vw; }
+            .arrow-right { right: 1vw; }
+            
             .dots {
                 bottom: 4vh;
             }
@@ -233,7 +280,6 @@
 </head>
 <body>
 
-    <!-- 戻るボタンのリンク先を変更 -->
     <a href="https://nakazu201-oss.github.io/my-ai-blog-/" class="back-btn sans uppercase">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         BACK TO PROFILE
@@ -246,7 +292,6 @@
         <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
     </div>
 
-    <!-- コンセプト文エリア -->
     <div class="category-info">
         <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
             <span class="w-6 h-[1px] bg-[#c5a059]"></span>
@@ -266,17 +311,17 @@
         </button>
 
         <div id="sliderTrack" class="slider-track">
-            <!-- インデックス: 0 -->
+            <!-- 0 -->
             <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-            <!-- インデックス: 1 -->
+            <!-- 1 -->
             <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
-            <!-- インデックス: 2 (ここからスタート) -->
+            <!-- 2 (Start) -->
             <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
-            <!-- インデックス: 3 -->
+            <!-- 3 -->
             <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
-            <!-- インデックス: 4 -->
+            <!-- 4 -->
             <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-            <!-- インデックス: 5 -->
+            <!-- 5 -->
             <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
         </div>
 
@@ -292,7 +337,7 @@
         const slides = document.querySelectorAll('.slide');
         const dotsContainer = document.getElementById('dotsContainer');
         
-        // ★初期表示のインデックスを「2」（3番目の要素である画像7）に変更
+        // 初期表示
         let currentIndex = 2;
 
         slides.forEach((_, i) => {
@@ -328,13 +373,10 @@
         function moveSlide(direction) {
             currentIndex += direction;
             
-            // ★無限ループのロジックに変更
-            // 0未満（最初の画像から戻る）になったら、一番最後の画像へ
+            // 無限ループ
             if (currentIndex < 0) {
                 currentIndex = slides.length - 1;
-            } 
-            // 最後の画像を越えたら（最後の画像から進む）、最初の画像へ
-            else if (currentIndex >= slides.length) {
+            } else if (currentIndex >= slides.length) {
                 currentIndex = 0;
             }
             
@@ -346,6 +388,7 @@
             setTimeout(updateSlider, 100);
         };
 
+        // スワイプ操作
         let touchStartX = 0;
         let touchEndX = 0;
         const sliderViewport = document.querySelector('.slider-viewport');
