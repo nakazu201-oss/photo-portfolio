@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: KNF風のフォントを読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Serif+JP:wght@300;400;600&family=Zen+Kaku+Gothic+New:wght@300;400&display=swap" rel="stylesheet">
+
     <style>
+        /* --- デザイン担当：KNF風のカラーとフォント設定 --- */
         :root {
+            --color-gold: #c5a059;
+            --color-bg: #fdfcf8; /* 和紙のようなごく淡いクリーム色 */
+            --color-text: #333333;
+            /* スライドの設定（PC用） */
             --slide-width: 65vw;
             --slide-margin: 3vw;
-            --total-slide-width: calc(var(--slide-width) + (var(--slide-margin) * 2));
         }
 
         body, html {
@@ -17,10 +27,19 @@
             padding: 0;
             height: 100%;
             width: 100%;
-            background-color: #020617; 
-            color: #f8fafc;
+            background-color: var(--color-bg);
+            color: var(--color-text);
             overflow: hidden;
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+            letter-spacing: 0.08em;
+        }
+
+        .sans { font-family: 'Zen Kaku Gothic New', sans-serif; }
+        
+        /* 縦書きクラス */
+        .tategaki {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
         }
 
         .slider-viewport {
@@ -30,40 +49,55 @@
             display: flex;
             align-items: center;
             overflow: hidden;
+            background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #fdfcf8 25%, #fdfcf8 75%, #f0f0f0 75%, #f0f0f0);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+        }
+
+        .slider-viewport::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(253,252,248,0.8) 100%);
+            pointer-events: none;
+            z-index: 10;
         }
 
         .slider-track {
             display: flex;
             align-items: center;
-            transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
+            z-index: 20;
         }
 
         .slide {
             flex: 0 0 var(--slide-width);
-            height: 80vh;
+            height: 70vh; 
             margin: 0 var(--slide-margin);
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.8s ease;
             opacity: 0.15;
-            transform: scale(0.8);
-            filter: blur(4px);
+            transform: scale(0.85);
+            filter: grayscale(100%) opacity(0.5); 
         }
 
         .slide.active {
             opacity: 1;
             transform: scale(1);
-            filter: blur(0);
+            filter: grayscale(0%) opacity(1);
         }
 
         .slide img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            background-color: #fff; 
+            padding: 4px; 
         }
 
         .nav-arrow {
@@ -71,82 +105,196 @@
             top: 50%;
             transform: translateY(-50%);
             z-index: 100;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
-            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--color-gold);
             cursor: pointer;
-            padding: 12px;
-            color: #94a3b8;
+            padding: 15px;
+            color: var(--color-gold);
             border-radius: 50%;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .nav-arrow:hover {
-            color: #f8fafc;
-            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            background: var(--color-gold);
+            transform: translateY(-50%) scale(1.05);
         }
 
-        .arrow-left { left: 3vw; }
-        .arrow-right { right: 3vw; }
+        .arrow-left { left: 4vw; }
+        .arrow-right { right: 4vw; }
 
         .dots {
             position: absolute;
-            bottom: 5vh;
+            bottom: 6vh;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 16px;
             z-index: 100;
         }
         .dot {
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background-color: #334155;
-            transition: all 0.4s;
+            background-color: #e5e7eb;
+            transition: all 0.5s;
+            cursor: pointer;
         }
         .dot.active {
-            background-color: #f8fafc;
-            transform: scale(2);
+            background-color: var(--color-gold);
+            transform: scale(1.8);
         }
 
         .title-overlay {
             position: absolute;
-            top: 5vh;
+            top: 6vh;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             z-index: 100;
             pointer-events: none;
         }
+
+        .tategaki-title {
+            position: absolute;
+            right: 4vw;
+            top: 20vh;
+            z-index: 100;
+            color: var(--color-gold);
+            font-size: 1.1rem;
+            letter-spacing: 0.5em;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 4vh;
+            left: 4vw;
+            z-index: 100;
+            color: var(--color-text);
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+        .back-btn:hover {
+            opacity: 0.6;
+        }
+
+        /* --- 新規追加：カテゴリー＆コンセプト情報 --- */
+        .category-info {
+            position: absolute;
+            bottom: 8vh;
+            left: 5vw;
+            z-index: 100;
+            pointer-events: none;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- スマホ（SP）用レスポンシブ設定 --- */
+        @media (max-width: 768px) {
+            :root {
+                --slide-width: 82vw; 
+                --slide-margin: 2vw;
+            }
+            .slide {
+                height: 50vh; /* テキスト領域を確保するため画像を調整 */
+                margin-top: 10vh; /* 少し下にずらして上部のテキストと離す */
+            }
+            .nav-arrow {
+                padding: 10px;
+                top: auto;
+                bottom: 12vh;
+                transform: none;
+            }
+            .nav-arrow:hover {
+                transform: scale(1.05); 
+            }
+            .arrow-left { left: 15vw; }
+            .arrow-right { right: 15vw; }
+            
+            .tategaki-title {
+                display: none; 
+            }
+
+            /* スマホ時のカテゴリー情報の配置 */
+            .category-info {
+                bottom: auto;
+                top: 13vh; /* タイトルのすぐ下へ */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                text-align: center;
+                animation: fadeInSP 1.5s ease-out forwards;
+            }
+            @keyframes fadeInSP {
+                from { opacity: 0; transform: translate(-50%, 10px); }
+                to { opacity: 1; transform: translate(-50%, 0); }
+            }
+            .dots {
+                bottom: 4vh;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <a href="javascript:history.back()" class="back-btn sans uppercase">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        BACK TO PROFILE
+    </a>
+
     <div class="title-overlay">
-        <h1 class="text-xs tracking-[0.8em] uppercase text-gray-500">Photography Portfolio</h1>
+        <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-400 sans">
+            Photography Archive
+        </h1>
+        <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
+    </div>
+
+    <!-- ★ 新規追加：コンセプト文エリア ★ -->
+    <div class="category-info">
+        <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
+            <span class="w-6 h-[1px] bg-[#c5a059]"></span>
+            <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 01</span>
+        </div>
+        <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">STILL LIFE<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 静物 -</span></h2>
+        <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
+            素材の呼吸を聴き、隠された表情を引き出す。<br>
+            質感、温度、そこに宿る物語。<br>
+            光と影の対話が、物の本質を浮き彫りにする。
+        </p>
+    </div>
+
+    <div class="tategaki-title tategaki">
+        記憶の断片を、<br>光と影で紡ぐ。
     </div>
 
     <div class="slider-viewport">
         <button class="nav-arrow arrow-left" onclick="moveSlide(-1)" aria-label="Previous">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
 
         <div id="sliderTrack" class="slider-track">
-            <!-- 
-                実際のファイル名「mono」に合わせて修正しました。
-                空白（スペース）は %20 のままにしてあります。
-            -->
             <div class="slide"><img src="mono%20(2).jpg" alt="作品 2"></div>
-            <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
-            <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
+            <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div> 
             <div class="slide"><img src="mono%20(7).jpg" alt="作品 7"></div>
+            <div class="slide"><img src="mono%20(5).jpg" alt="作品 5"></div>
             <div class="slide"><img src="mono%20(9).jpg" alt="作品 9"></div>
-            <div class="slide"><img src="mono%20(11).jpg" alt="作品 11"></div>
+            <div class="slide"><img src="mono%20(4).jpg" alt="作品 4"></div>
         </div>
 
         <button class="nav-arrow arrow-right" onclick="moveSlide(1)" aria-label="Next">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </button>
 
         <div id="dotsContainer" class="dots"></div>
@@ -161,14 +309,23 @@
         slides.forEach((_, i) => {
             const dot = document.createElement('div');
             dot.classList.add('dot');
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateSlider();
+            });
             dotsContainer.appendChild(dot);
         });
         const dots = document.querySelectorAll('.dot');
 
         function updateSlider() {
-            const slideWidthVW = 71; 
-            const centerOffsetVW = (100 - slideWidthVW) / 2;
-            const targetX = -(currentIndex * slideWidthVW) + centerOffsetVW;
+            const rootStyles = getComputedStyle(document.documentElement);
+            const slideWidthVW = parseFloat(rootStyles.getPropertyValue('--slide-width'));
+            const slideMarginVW = parseFloat(rootStyles.getPropertyValue('--slide-margin'));
+            
+            const totalSlideWidthVW = slideWidthVW + (slideMarginVW * 2);
+            
+            const centerOffsetVW = (100 - totalSlideWidthVW) / 2;
+            const targetX = -(currentIndex * totalSlideWidthVW) + centerOffsetVW;
             
             track.style.transform = `translateX(${targetX}vw)`;
 
@@ -187,7 +344,32 @@
         }
 
         window.onload = updateSlider;
-        window.onresize = updateSlider;
+        window.onresize = () => {
+            setTimeout(updateSlider, 100);
+        };
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const sliderViewport = document.querySelector('.slider-viewport');
+
+        sliderViewport.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        sliderViewport.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const threshold = 50; 
+            if (touchEndX < touchStartX - threshold) {
+                moveSlide(1);
+            }
+            if (touchEndX > touchStartX + threshold) {
+                moveSlide(-1);
+            }
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') moveSlide(-1);
