@@ -117,7 +117,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* PC等、マウスが使える端末のみホバー効果を適用（スマホでのバグを防止） */
         @media (hover: hover) {
             .nav-arrow:hover {
                 color: #fff;
@@ -126,7 +125,6 @@
             }
         }
         
-        /* スマホ等のタッチ端末では、押した瞬間だけ光るようにする */
         @media (hover: none) {
             .nav-arrow:active {
                 background: rgba(197, 160, 89, 0.2);
@@ -203,23 +201,22 @@
         /* --- スマホ（SP）用の完璧な再設計 --- */
         @media (max-width: 768px) {
             :root {
-                --slide-width: 75vw; /* 左右の矢印を置くスペースを確保 */
+                --slide-width: 75vw; 
                 --slide-margin: 3vw;
             }
             
-            /* ヘッダー周りをスッキリさせるため、英語タイトルを非表示 */
             .title-overlay {
                 display: none; 
             }
             
             .back-btn {
-                top: 3vh; /* 少し上に詰める */
+                top: 3vh; 
             }
 
-            /* テキスト情報の上部固定化：絶対に画像と被らせない */
+            /* テキスト情報を少し上に詰める */
             .category-info {
                 bottom: auto;
-                top: 10vh; /* 画面の上から10%の位置に固定 */
+                top: 9vh; /* 10vhから9vhにして少し上に */
                 left: 50%;
                 transform: translateX(-50%);
                 width: 90%;
@@ -234,9 +231,8 @@
                 to { opacity: 1; transform: translate(-50%, 0); }
             }
 
-            /* スマホ用のタイポグラフィ（文字）調整 */
             .category-info h2 {
-                font-size: 1.8rem;
+                font-size: 1.6rem; /* 少しだけ小さくして圧迫感を減らす */
                 margin-bottom: 0.8rem;
                 display: flex;
                 flex-direction: column;
@@ -249,23 +245,26 @@
             }
             .category-info p {
                 font-size: 10px;
-                line-height: 2.4; /* 読みやすいように行間を広げる */
+                line-height: 2.2; 
             }
 
-            /* スライダー本体の配置：テキストを避けて下半分に配置 */
+            /* スライダー本体の配置：テキストとの距離を縮める */
             .slider-track {
-                align-items: flex-start; /* 上揃えにしてから */
-                padding-top: 42vh; /* 上から42%の余白を開けて画像を置く */
+                align-items: flex-start;
+                /* 42vhから32vhに変更。テキストと画像の隙間を埋める */
+                padding-top: 32vh; 
             }
 
             .slide {
-                height: 42vh; /* 画像の高さ。42(余白)+42(画像)=84%。これで下のドットとも被らない */
+                /* 画像の高さを少し大きくして存在感を出す */
+                height: 46vh; 
                 margin-top: 0;
             }
 
-            /* 矢印の配置：画像の高さに合わせて中央に置く */
+            /* ★矢印の配置：画像の高さに合わせて完璧な中央に置く★ */
+            /* 上部余白(32vh) + 画像の高さの半分(46vh / 2 = 23vh) = 55vh */
             .nav-arrow {
-                top: 63%; /* 42vh(余白) + 21vh(画像の半分) = 63% の位置 */
+                top: 55vh; 
                 width: 40px;
                 height: 40px;
             }
@@ -273,7 +272,7 @@
             .arrow-right { right: 1vw; }
             
             .dots {
-                bottom: 4vh;
+                bottom: 5vh;
             }
         }
     </style>
