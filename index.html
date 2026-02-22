@@ -13,8 +13,10 @@
     <style>
         :root {
             --color-gold: #c5a059;
-            --color-bg: #fdfcf8; 
-            --color-text: #333333;
+            --color-bg-dark: #0a0a0a;  /* スライダー用の黒 */
+            --color-bg-light: #fdfcf8; /* 冒頭用の白 */
+            --color-text-dark: #333333;
+            --color-text-light: #e5e5e5;
             --slide-width: 65vw;
             --slide-margin: 3vw;
         }
@@ -25,11 +27,11 @@
             width: 100%;
             min-height: 100vh;
             overflow-x: hidden;
-            background-color: var(--color-bg);
-            color: var(--color-text);
+            background-color: var(--color-bg-dark); /* ベースは黒 */
+            color: var(--color-text-light);
             font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
             letter-spacing: 0.08em;
-            position: relative; /* 戻るボタンの配置基準として必要 */
+            position: relative;
         }
 
         .sans { font-family: 'Zen Kaku Gothic New', sans-serif; }
@@ -40,7 +42,7 @@
             top: 4vh;
             left: 4vw;
             z-index: 999;
-            color: var(--color-text);
+            color: var(--color-text-dark); /* 白背景の上に乗るので暗い色 */
             font-size: 0.8rem;
             letter-spacing: 0.2em;
             display: flex;
@@ -49,6 +51,7 @@
             transition: all 0.3s;
             background: transparent;
             padding: 0;
+            text-decoration: none;
         }
         .back-btn:hover {
             opacity: 0.6;
@@ -61,6 +64,14 @@
             width: 100%;
             min-height: 100vh;
             border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        /* 冒頭コンセプト用の背景装飾（白背景ベース） */
+        .hero-bg {
+            background-color: var(--color-bg-light);
+            color: var(--color-text-dark);
+            background-image: radial-gradient(circle at top right, rgba(197, 160, 89, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at bottom left, rgba(197, 160, 89, 0.05) 0%, transparent 50%);
         }
 
         /* PC用：タイトル装飾 */
@@ -82,7 +93,7 @@
             pointer-events: none;
         }
 
-        /* スライダー領域の設定 */
+        /* スライダー領域の設定（黒背景ベース） */
         .slider-viewport {
             position: relative;
             width: 100%;
@@ -90,7 +101,7 @@
             display: flex;
             align-items: center;
             overflow: hidden;
-            background-image: repeating-linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0), repeating-linear-gradient(45deg, #f0f0f0 25%, #fdfcf8 25%, #fdfcf8 75%, #f0f0f0 75%, #f0f0f0);
+            background-image: repeating-linear-gradient(45deg, #161616 25%, transparent 25%, transparent 75%, #161616 75%, #161616), repeating-linear-gradient(45deg, #161616 25%, #0a0a0a 25%, #0a0a0a 75%, #161616 75%, #161616);
             background-position: 0 0, 10px 10px;
             background-size: 20px 20px;
         }
@@ -99,7 +110,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, transparent 0%, rgba(253,252,248,0.8) 100%);
+            background: radial-gradient(circle at center, transparent 0%, rgba(10,10,10,0.8) 100%);
             pointer-events: none;
             z-index: 10;
         }
@@ -138,9 +149,9 @@
             height: auto; 
             width: auto;
             object-fit: contain;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            background-color: #fff; 
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            background-color: #111; 
             padding: 4px; 
         }
 
@@ -150,7 +161,7 @@
             top: 50%;
             transform: translateY(-50%);
             z-index: 100;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(4px);
             border: 1px solid var(--color-gold);
             cursor: pointer;
@@ -162,11 +173,11 @@
             color: var(--color-gold);
             border-radius: 50%;
             transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         @media (hover: hover) {
             .nav-arrow:hover {
-                color: #fff;
+                color: #0a0a0a;
                 background: var(--color-gold);
                 transform: translateY(-50%) scale(1.05);
             }
@@ -189,7 +200,7 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background-color: #e5e7eb;
+            background-color: #333;
             transition: all 0.5s;
             cursor: pointer;
         }
@@ -213,7 +224,6 @@
                 position: relative;
                 bottom: auto; left: auto; top: auto; transform: none;
                 width: 100%;
-                /* 戻るボタンが追従しなくなったので上の余白を少し調整 */
                 padding: 10vh 6vw 2vh 6vw; 
                 text-align: center;
                 z-index: 50;
@@ -266,10 +276,81 @@
         BACK TO PROFILE
     </a>
 
-    <!-- ▼▼ 第1セクション：静物（STILL LIFE） ▼▼ -->
+    <!-- ▼▼ 第0セクション：コンセプト＆カテゴリ概要（ここを白系に） ▼▼ -->
+    <section class="portfolio-section hero-bg flex flex-col justify-center items-center py-24 px-6 md:px-12">
+        
+        <!-- コンセプトメッセージ -->
+        <div class="text-center max-w-3xl mx-auto mt-12 md:mt-0">
+            <h1 class="text-2xl md:text-4xl tracking-[0.2em] mb-6 text-gray-800 leading-tight">
+                Creative for Direction
+                <span class="block text-xs md:text-sm text-[#c5a059] tracking-[0.4em] mt-4 sans uppercase">ディレクションの精度を高める、クリエイターの視点</span>
+            </h1>
+            <div class="w-[1px] h-10 bg-[#c5a059] mx-auto mb-8 opacity-50"></div>
+            <p class="text-xs md:text-sm text-gray-600 tracking-[0.15em] leading-[2.2] sans text-justify md:text-center">
+                WEBマーケティングにおいて、クリエイティブの質はプロジェクトの成否を大きく左右します。<br class="hidden md:block">
+                単なる進行管理にとどまらず、本質的な課題解決を導く「スーパー営業マン」であるために。<br class="hidden md:block">
+                私自身がクリエイターとなることで、制作のリアルな空気と技術を理解し、<br class="hidden md:block">
+                解像度が高く、より血の通った精度の高いディレクションを実現します。
+            </p>
+        </div>
+
+        <!-- 3つのカテゴリー紹介 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-5xl mx-auto mt-20 items-stretch">
+            
+            <!-- Category: Photography -->
+            <a href="#slider1" class="group flex flex-col h-full border border-[#c5a059]/30 bg-white p-8 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#c5a059]/10 cursor-pointer">
+                <span class="text-[#c5a059] text-[10px] tracking-[0.3em] sans uppercase mb-3 block">Category 01</span>
+                <h3 class="text-xl md:text-2xl tracking-[0.15em] mb-5 text-gray-800">Photography</h3>
+                <p class="text-[11px] md:text-xs text-gray-500 tracking-[0.1em] leading-[2.2] sans mb-8 flex-grow">
+                    静物から人物まで、光と影を操り、<br>
+                    被写体の本質と隠された物語を<br class="block md:hidden">引き出します。
+                </p>
+                <div class="mt-auto">
+                    <span class="inline-flex items-center text-[10px] text-[#c5a059] sans tracking-widest group-hover:underline underline-offset-4">
+                        VIEW WORKS 
+                        <svg class="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </span>
+                </div>
+            </a>
+
+            <!-- Category: Videography -->
+            <div class="flex flex-col h-full border border-gray-200 bg-gray-50 p-8 md:p-10 text-center opacity-80">
+                <span class="text-gray-400 text-[10px] tracking-[0.3em] sans uppercase mb-3 block">Category 02</span>
+                <h3 class="text-xl md:text-2xl tracking-[0.15em] text-gray-400 mb-5">Videography</h3>
+                <p class="text-[11px] md:text-xs text-gray-400 tracking-[0.1em] leading-[2.2] sans mb-8 flex-grow">
+                    時間の流れと音を紡ぎ、<br>
+                    記憶に残る映像体験を<br class="block md:hidden">構築します。
+                </p>
+                <div class="mt-auto">
+                    <span class="inline-block px-5 py-2 bg-gray-200 text-gray-500 text-[9px] tracking-widest sans uppercase rounded-sm">
+                        Coming Soon
+                    </span>
+                </div>
+            </div>
+
+            <!-- Category: Web Design -->
+            <div class="flex flex-col h-full border border-[#c5a059]/30 bg-white p-8 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-[#c5a059]/10">
+                <span class="text-[#c5a059] text-[10px] tracking-[0.3em] sans uppercase mb-3 block">Category 03</span>
+                <h3 class="text-xl md:text-2xl tracking-[0.15em] mb-5 text-gray-800">Web Design</h3>
+                <p class="text-[11px] md:text-xs text-gray-500 tracking-[0.1em] leading-[2.2] sans mb-8 flex-grow">
+                    UI/UXを意識したデザインと<br class="block lg:hidden">コーディング。<br>
+                    ご覧のサイト自体が、<br class="block md:hidden">私自身が制作した実績の一つです。
+                </p>
+                <div class="mt-auto">
+                    <span class="inline-block px-5 py-2 bg-[#c5a059]/10 text-[#c5a059] border border-[#c5a059]/20 text-[9px] tracking-widest sans uppercase rounded-sm">
+                        You are here
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <!-- ▲▲ 第0セクション ここまで ▲▲ -->
+
+    <!-- ▼▼ 第1セクション：静物（STILL LIFE / ここから黒系背景） ▼▼ -->
     <section class="portfolio-section" id="slider1">
         <div class="title-overlay">
-            <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-400 sans">
+            <h1 class="text-[10px] md:text-xs tracking-[0.5em] md:tracking-[0.8em] uppercase text-gray-500 sans">
                 Photography Archive
             </h1>
             <div class="w-[1px] h-6 bg-[#c5a059] mx-auto mt-3 opacity-50 md:block hidden"></div>
@@ -278,11 +359,11 @@
         <div class="category-info">
             <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
                 <span class="w-6 h-[1px] bg-[#c5a059]"></span>
-                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 01</span>
+                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Photography</span>
                 <span class="w-6 h-[1px] bg-[#c5a059]"></span>
             </div>
-            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">STILL LIFE<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 静物 -</span></h2>
-            <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
+            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-100 mb-3 md:mb-4">STILL LIFE<span class="block text-[10px] md:text-xs text-gray-500 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 静物 -</span></h2>
+            <p class="text-[10px] md:text-xs text-gray-400 tracking-[0.2em] leading-loose sans text-center md:text-left">
                 素材の呼吸を聴き、隠された表情を引き出す。<br>
                 質感、温度、そこに宿る物語。<br>
                 光と影の対話が、物の本質を浮き彫りにする。
@@ -296,12 +377,12 @@
 
             <!-- data-initial-index="2" で配列の2番目(mono12.jpg)を初期表示に設定 -->
             <div class="slider-track" data-initial-index="2">
-                <div class="slide"><img src="mono2.jpg" alt="作品 2"></div>
-                <div class="slide"><img src="mono11.jpg" alt="作品 11"></div> 
-                <div class="slide"><img src="mono12.jpg" alt="作品 12"></div>
-                <div class="slide"><img src="mono6.jpg" alt="作品 6"></div>
-                <div class="slide"><img src="mono9.jpg" alt="作品 9"></div>
-                <div class="slide"><img src="mono13.jpg" alt="作品 13"></div>
+                <div class="slide"><img src="mono2.jpg" alt="作品 2" onerror="this.src='https://placehold.co/400x600/1a1a1a/c5a059?text=Photo+1'"></div>
+                <div class="slide"><img src="mono11.jpg" alt="作品 11" onerror="this.src='https://placehold.co/600x400/1a1a1a/c5a059?text=Photo+2'"></div> 
+                <div class="slide"><img src="mono12.jpg" alt="作品 12" onerror="this.src='https://placehold.co/500x500/1a1a1a/c5a059?text=Photo+3'"></div>
+                <div class="slide"><img src="mono6.jpg" alt="作品 6" onerror="this.src='https://placehold.co/400x500/1a1a1a/c5a059?text=Photo+4'"></div>
+                <div class="slide"><img src="mono9.jpg" alt="作品 9" onerror="this.src='https://placehold.co/600x400/1a1a1a/c5a059?text=Photo+5'"></div>
+                <div class="slide"><img src="mono13.jpg" alt="作品 13" onerror="this.src='https://placehold.co/400x600/1a1a1a/c5a059?text=Photo+6'"></div>
             </div>
 
             <button class="nav-arrow arrow-right" aria-label="Next">
@@ -321,11 +402,11 @@
         <div class="category-info">
             <div class="flex items-center gap-3 mb-2 justify-center md:justify-start">
                 <span class="w-6 h-[1px] bg-[#c5a059]"></span>
-                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Category 02</span>
+                <span class="text-[#c5a059] text-[9px] md:text-[10px] tracking-[0.4em] sans uppercase">Photography</span>
                 <span class="w-6 h-[1px] bg-[#c5a059]"></span>
             </div>
-            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-800 mb-3 md:mb-4">PORTRAIT<span class="block text-[10px] md:text-xs text-gray-400 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 人物 -</span></h2>
-            <p class="text-[10px] md:text-xs text-gray-600 tracking-[0.2em] leading-loose sans text-center md:text-left">
+            <h2 class="text-2xl md:text-4xl font-medium tracking-[0.2em] text-gray-100 mb-3 md:mb-4">PORTRAIT<span class="block text-[10px] md:text-xs text-gray-500 tracking-[0.5em] mt-1 sans md:inline md:ml-4">- 人物 -</span></h2>
+            <p class="text-[10px] md:text-xs text-gray-400 tracking-[0.2em] leading-loose sans text-center md:text-left">
                 その瞬間にしかない感情を、光の中に閉じ込める。<br>
                 瞳の奥に宿る真実、かすかな息遣い。<br>
                 レンズ越しに交わす、言葉なき対話。
@@ -339,15 +420,13 @@
 
             <!-- data-initial-index="3" で配列の3番目(pt8.JPG)を初期表示に設定 -->
             <div class="slider-track" data-initial-index="3">
-                <div class="slide"><img src="pt0.jpg" alt="ポートレート 0"></div>
-                <div class="slide"><img src="pt3.jpg" alt="ポートレート 3"></div> 
-                <!-- pt13 と pt6 を入れ替えました -->
-                <div class="slide"><img src="pt13.jpg" alt="ポートレート 13"></div>
-                <div class="slide"><img src="pt8.JPG" alt="ポートレート 8"></div>
-                <!-- pt11 は削除しました -->
-                <div class="slide"><img src="pt12.jpg" alt="ポートレート 12"></div>
-                <div class="slide"><img src="pt6.JPG" alt="ポートレート 6"></div>
-                <div class="slide"><img src="pt16.jpg" alt="ポートレート 16"></div>
+                <div class="slide"><img src="pt0.jpg" alt="ポートレート 0" onerror="this.src='https://placehold.co/400x600/1a1a1a/c5a059?text=Portrait+1'"></div>
+                <div class="slide"><img src="pt3.jpg" alt="ポートレート 3" onerror="this.src='https://placehold.co/600x400/1a1a1a/c5a059?text=Portrait+2'"></div> 
+                <div class="slide"><img src="pt13.jpg" alt="ポートレート 13" onerror="this.src='https://placehold.co/500x500/1a1a1a/c5a059?text=Portrait+3'"></div>
+                <div class="slide"><img src="pt8.JPG" alt="ポートレート 8" onerror="this.src='https://placehold.co/400x500/1a1a1a/c5a059?text=Portrait+4'"></div>
+                <div class="slide"><img src="pt12.jpg" alt="ポートレート 12" onerror="this.src='https://placehold.co/600x400/1a1a1a/c5a059?text=Portrait+5'"></div>
+                <div class="slide"><img src="pt6.JPG" alt="ポートレート 6" onerror="this.src='https://placehold.co/400x600/1a1a1a/c5a059?text=Portrait+6'"></div>
+                <div class="slide"><img src="pt16.jpg" alt="ポートレート 16" onerror="this.src='https://placehold.co/500x600/1a1a1a/c5a059?text=Portrait+7'"></div>
             </div>
 
             <button class="nav-arrow arrow-right" aria-label="Next">
@@ -359,12 +438,14 @@
     <!-- ▲▲ 第2セクション ここまで ▲▲ -->
 
     <script>
-        // ページ内のすべてのポートフォリオセクションを取得
-        const sections = document.querySelectorAll('.portfolio-section');
+        // ページ内のすべてのポートフォリオセクション（スライダーがあるもの）を取得
+        const sections = document.querySelectorAll('.portfolio-section:not(.hero-bg)');
 
         // 各セクションごとにスライダーの機能を設定
         sections.forEach((section) => {
             const track = section.querySelector('.slider-track');
+            if(!track) return; // スライダーがないセクションはスキップ
+
             const slides = section.querySelectorAll('.slide');
             const dotsContainer = section.querySelector('.dots');
             const prevBtn = section.querySelector('.arrow-left');
@@ -442,6 +523,16 @@
                 if (touchEndX < touchStartX - threshold) moveSlide(1);
                 if (touchEndX > touchStartX + threshold) moveSlide(-1);
             }, {passive: true});
+        });
+
+        // スムーススクロール（Photographyクリック用）
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 </body>
